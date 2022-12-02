@@ -17,11 +17,9 @@ variable "lambda_config" {
   type = map(any)
   default = {
     function_name = "tdsa_query_processor_test"
-    handler       = "src/sahl.lambda_handler"
+    handler       = "lambda_function.lambda_handler"
   }
 }
-
-
 
 # =====================================================
 
@@ -41,8 +39,7 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 
 # add a trigger
 # create a sqs 
-# trigger to reference the sqs
-# 
+# trigger to reference the sqs 
 # s3
 
 # creating a bucket for the deployment zip into the lambda function
@@ -73,7 +70,9 @@ resource "aws_lambda_function" "lambda" {
   # adding environment variables
   environment {
     variables = {
-      testing = "value"
+      ORDER_QUEUE             = "DataOrder"
+      PROCESSED_ORDERS_BUCKET = "processedenquiries"
+
     }
   }
 }
