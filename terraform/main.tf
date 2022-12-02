@@ -26,7 +26,23 @@ variable "lambda_config" {
 # =====================================================
 
 
+# create a lambda function
+# create log groups
+# give it a role and premissions to write to log
+# add in environment variables
+# add in a lambda layer
 
+resource "aws_lambda_layer_version" "lambda_layer" {
+  filename   = "../lambda_layer/pyodbc-f42da674-0585-490d-8d46-d58307ea2001.zip"
+  layer_name = "pyodbc_lambda_layer_name"
+
+  compatible_runtimes = ["python3.7", "python3.8"]
+}
+
+# add a trigger
+# create a sqs 
+# trigger to reference the sqs
+# 
 # s3
 
 # creating a bucket for the deployment zip into the lambda function
@@ -50,12 +66,14 @@ resource "aws_lambda_function" "lambda" {
   s3_key           = aws_s3_object.file_upload.key
   role             = aws_iam_role.lambda_role.arn
   handler          = var.lambda_config.handler
-  runtime          = "python3.8"
-  timeout          = 30
+  runtime          = "python3.7"
+  layers           = [aws_lambda_layer_version.lambda_layer.arn]
+  timeout          = 120
+
   # adding environment variables
   environment {
     variables = {
-      Ahmed = "Sahl"
+      testing = "value"
     }
   }
 }
@@ -73,13 +91,13 @@ resource "aws_cloudwatch_log_group" "lambda_function_log" {
 
 # deployment_zip_file.
 
-data "archive_file" "lambda" {
-  type        = "zip"
-  source_dir  = "../"
-  output_path = "../temp/lambda.zip"
-  excludes    = ["src/tests.py", ".git", ".gitignore", "temp", "ignoreme", "terraform"]
+# data "archive_file" "lambda" {
+#   type        = "zip"
+#   source_dir  = "../"
+#   output_path = "../temp/lambda.zip"
+#   excludes    = ["src/tests.py", ".git", ".gitignore", "temp", "ignoreme", "terraform"]
 
-}
+# }
 
 # find local file deploy.zip
 data "local_file" "deploy-zip" {

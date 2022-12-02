@@ -61,17 +61,3 @@ jobs:
         cd terraform
         terraform init
         terraform apply --auto-approve
-# # Credentials for terraform access
-#     - name: Configure AWS Credentials
-#       uses: aws-actions/configure-aws-credentials@v1
-#       with:
-#         aws-access-key-id: ${{ secrets.ACCESS_KEY }}
-#         aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
-#         aws-region: eu-west-1
-
-# # deploying terraform 
-
-#     - name: Install dependencies
-#       run: |
-#         python -m pip install --upgrade pip
-#         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
