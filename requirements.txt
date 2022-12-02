@@ -1,0 +1,11 @@
+boto3==1.21.23
+PyPika~=0.48.9
+#pyodbc~=4.0.32
+agate~=1.6.3
+#pytest~=7.0.1
+pathvalidate~=2.5.0
+git+ssh://git@github.com/JiscDACT/idd_metadata.git#subdirectory=metadata_rules
+git+ssh://git@github.com/JiscDACT/idd_metadata.git#subdirectory=metadata_specifications
+git+ssh://git@github.com/JiscDACT/idd_metadata.git#subdirectory=metadata_utils
+
+openpyxl~=3.0.9

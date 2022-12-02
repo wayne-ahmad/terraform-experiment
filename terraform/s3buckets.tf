@@ -10,13 +10,13 @@
 
 # # create test bucket 
 
-# resource "aws_s3_bucket" "service-status-page-trigger-bucket" {
+# resource "aws_s3_bucket" "service-status-page-trigger-bucket2" {
 #   bucket = "terraform-tdsa-bucket-testing777"
 # }
 # # create prod bucket 
 
 
-# resource "aws_s3_bucket" "service-status-page-trigger-bucket" {
+# resource "aws_s3_bucket" "service-status-page-trigger-bucket3" {
 #   bucket = "terraform-tdsa-bucket-testing777"
 # }
 
@@ -35,7 +35,7 @@
 
 # # test block public access
 
-# resource "aws_s3_bucket_public_access_block" "s3_block_trigger" {
+# resource "aws_s3_bucket_public_access_block" "s3_block_trigger2" {
 #   # Apply access policy to above s3_bucket 
 #   bucket = aws_s3_bucket.service-status-page-trigger-bucket.id
 #   # Block public access  
@@ -47,7 +47,7 @@
 
 # # prod block public access
 
-# resource "aws_s3_bucket_public_access_block" "s3_block_trigger" {
+# resource "aws_s3_bucket_public_access_block" "s3_block_trigger3" {
 #   # Apply access policy to above s3_bucket 
 #   bucket = aws_s3_bucket.service-status-page-trigger-bucket.id
 #   # Block public access  
