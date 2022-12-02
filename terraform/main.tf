@@ -91,13 +91,13 @@ resource "aws_cloudwatch_log_group" "lambda_function_log" {
 
 # deployment_zip_file.
 
-# data "archive_file" "lambda" {
-#   type        = "zip"
-#   source_dir  = "../"
-#   output_path = "../temp/lambda.zip"
-#   excludes    = ["src/tests.py", ".git", ".gitignore", "temp", "ignoreme", "terraform"]
+data "archive_file" "lambda" {
+  type        = "zip"
+  source_dir  = "../"
+  output_path = "../temp/lambda.zip"
+  excludes    = ["src/tests.py", ".git", ".gitignore", "temp", "ignoreme", "terraform"]
 
-# }
+}
 
 # find local file deploy.zip
 data "local_file" "deploy-zip" {
