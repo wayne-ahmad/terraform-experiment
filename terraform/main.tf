@@ -82,12 +82,18 @@ data "archive_file" "lambda" {
 
 }
 
+# find local file deploy.zip
+data "local_file" "deploy-zip" {
+  filename = "../deploy.zip"
+}
+
+
 # uploading deployment zip to deployment bucket
 
 resource "aws_s3_object" "file_upload" {
   bucket = aws_s3_bucket.deployment-bucket.id
   key    = "lambda-deployment.zip"
-  source = data.archive_file.lambda.output_path # its mean it depended on zip
+  source = data.local_file.deploy-zip # its mean it depended on zip
 }
 
 
