@@ -60,7 +60,7 @@ jobs:
         ls -a  
         cd terraform
         terraform init
-        terraform apply --auto-approve
+        terraform destroy --auto-approve
 # # Credentials for terraform access
 #     - name: Configure AWS Credentials
 #       uses: aws-actions/configure-aws-credentials@v1
