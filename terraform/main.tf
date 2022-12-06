@@ -45,7 +45,7 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 
 resource "aws_sqs_queue" "Data_order_queue" {
   name                       = "Data_order_queue"
-  visibility_timeout_seconds = 30
+  visibility_timeout_seconds = 120
   delay_seconds              = 0
   max_message_size           = 262144
   message_retention_seconds  = 345600
