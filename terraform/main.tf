@@ -28,6 +28,7 @@ variable "lambda_config" {
 # create log groups
 # give it a role and premissions to write to log
 # add in environment variables
+
 # add in a lambda layer
 
 resource "aws_lambda_layer_version" "lambda_layer" {
