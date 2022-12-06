@@ -21,7 +21,13 @@ data "aws_iam_policy_document" "assume_lambda_policy" {
       "s3:ListBucket",
       "sqs:ReceiveMessage",
       "sqs:DeleteMessage",
-      "sqs:GetQueueAttributes"
+      "sqs:GetQueueAttributes",
+      "s3-object-lambda:*",
+      "ec2:CreateNetworkInterface",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DeleteNetworkInterface",
+      "ec2:AssignPrivateIpAddresses",
+      "ec2:UnassignPrivateIpAddresses"
     ]
     effect    = "Allow"
     resources = ["*"]
