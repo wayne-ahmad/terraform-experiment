@@ -18,7 +18,8 @@ data "aws_iam_policy_document" "assume_lambda_policy" {
       "logs:*",
       "s3:GetObject",
       "s3:putObject",
-      "s3:ListBucket"
+      "s3:ListBucket",
+      "sqs:ReceiveMessage"
     ]
     effect    = "Allow"
     resources = ["*"]
