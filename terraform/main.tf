@@ -41,21 +41,16 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 # create queue policy
 # create dead letter queue
 
-resource "aws_sqs_queue" "terraform_queue_deadletter" {
-  name = "terraform-example-deadletter-queue"
-  redrive_allow_policy = jsonencode({
-    redrivePermission = "byQueue",
-    sourceQueueArns   = aws_sqs_queue.Data_order_queue.arn
-  })
-}
 # create a sqs 
 
 resource "aws_sqs_queue" "Data_order_queue" {
-  name                      = "Data_order_queue"
-  delay_seconds             = 0
-  max_message_size          = 262144
-  message_retention_seconds = 345600
-  receive_wait_time_seconds = 10
+  name                       = "Data_order_queue"
+  visibility_timeout_seconds = 30
+  delay_seconds              = 0
+  max_message_size           = 262144
+  message_retention_seconds  = 345600
+  receive_wait_time_seconds  = 0
+  redrive_allow_policy       = aws_sqs_queue.delivery_failure_queue.arn
 
 
   tags = {
