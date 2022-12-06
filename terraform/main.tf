@@ -132,7 +132,10 @@ data "archive_file" "lambda" {
 
 }
 
-# find local file deploy.zip
+# find local file deploy.zip | Note - This file is created during the run build.sh in the github action.
+# The file gets created inside the containter running the action, gets uploaded to the bucket,
+# then deletes when the container is shut down
+
 data "local_file" "deploy-zip" {
   filename = "../deploy.zip"
 }
