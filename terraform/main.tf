@@ -96,8 +96,8 @@ resource "aws_s3_bucket" "deployment-bucket" {
 
 resource "aws_lambda_function" "lambda" {
 
-  function_name = var.lambda_config.function_name
-  # filename         = data.archive_file.lambda.output_path
+  function_name    = var.lambda_config.function_name
+  filename         = data.archive_file.lambda.output_path
   source_code_hash = data.archive_file.lambda.output_base64sha256
   s3_bucket        = aws_s3_bucket.deployment-bucket.bucket
   s3_key           = aws_s3_object.file_upload.key
