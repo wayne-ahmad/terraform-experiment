@@ -132,7 +132,7 @@ resource "aws_cloudwatch_log_group" "lambda_function_log" {
 
 data "archive_file" "lambda" {
   type        = "zip"
-  source_dir  = "../deploy.zip"
+  source_dir  = "../"
   output_path = "../temp/lambda.zip"
   excludes    = [".gitignore"]
 
