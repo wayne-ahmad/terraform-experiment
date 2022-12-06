@@ -23,11 +23,6 @@ variable "lambda_config" {
 
 # =====================================================
 
-
-# create a lambda function
-# create log groups
-# give it a role and premissions to write to log
-# add in environment variables
 # add in a lambda layer
 
 resource "aws_lambda_layer_version" "lambda_layer" {
@@ -37,12 +32,9 @@ resource "aws_lambda_layer_version" "lambda_layer" {
   compatible_runtimes = ["python3.7", "python3.8"]
 }
 
-# add a trigger
 # create queue policy
-# create dead letter queue
 
 # create a sqs 
-
 resource "aws_sqs_queue" "Data_order_queue" {
   name                       = "Data_order_queue"
   visibility_timeout_seconds = 120
@@ -53,7 +45,7 @@ resource "aws_sqs_queue" "Data_order_queue" {
 
   redrive_policy = jsonencode({
     deadLetterTargetArn = aws_sqs_queue.delivery_failure_queue.arn
-    maxReceiveCount     = 5
+    maxReceiveCount     = 10
   })
 
   tags = {
@@ -61,6 +53,7 @@ resource "aws_sqs_queue" "Data_order_queue" {
   }
 }
 
+# create dead letter queue
 # Delivery failure queue
 resource "aws_sqs_queue" "delivery_failure_queue" {
   name                      = "delivery_failure_queue"
@@ -75,20 +68,17 @@ resource "aws_sqs_queue" "delivery_failure_queue" {
   }
 }
 
-# trigger to reference the sqs 
+# subscribe Lambda function to SQS 
 resource "aws_lambda_event_source_mapping" "event_source_mapping" {
-  event_source_arn = aws_sqs_queue.Data_order_queue.arn
-  enabled          = true
-  function_name    = aws_lambda_function.lambda.arn
-  batch_size       = 5
+  event_source_arn                   = aws_sqs_queue.Data_order_queue.arn
+  enabled                            = true
+  function_name                      = aws_lambda_function.lambda.arn
+  batch_size                         = 5
+  maximum_batching_window_in_seconds = 30
 }
-# trigger 
 
-# resource "aws_s3_queue" "status_page_trigger" {
-# s3
 
 # creating a bucket for the deployment zip into the lambda function
-
 resource "aws_s3_bucket" "deployment-bucket" {
   bucket = "deployment-zip-bucket-tdsa"
   tags = {
@@ -97,8 +87,8 @@ resource "aws_s3_bucket" "deployment-bucket" {
   }
 }
 
-# lambda function, loading zip from deployment-bucket, role python
 
+# lambda function, loading zip from deployment-bucket, role python
 resource "aws_lambda_function" "lambda" {
 
   function_name = var.lambda_config.function_name
@@ -169,25 +159,3 @@ resource "aws_iam_role" "lambda_role" {
   name               = "lambda_role"
   assume_role_policy = data.aws_iam_policy_document.assume_lambda_role.json
 }
-
-
-
-#   lambda_function {
-#     lambda_function_arn = aws_lambda_function.lambda.arn
-#     events              = ["s3:ObjectCreated:*"]
-#     filter_suffix       = ".json"
-#   }
-#   depends_on = [
-#     aws_lambda_permission.bucket_invocation
-#   ]
-# }
-
-# # permissions
-
-# resource "aws_lambda_permission" "bucket_invocation" {
-#   statement_id  = "AllowExecutionFromS3"
-#   action        = "lambda:InvokeFunction"
-#   function_name = aws_lambda_function.lambda.function_name
-#   principal     = "s3.amazonaws.com"
-#   source_arn    = aws_s3_bucket.service-status-page-trigger-bucket.arn
-# }
