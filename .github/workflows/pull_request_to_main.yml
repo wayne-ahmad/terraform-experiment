@@ -34,7 +34,6 @@ jobs:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
 
-
 # install requirements.txt
     - name: Install dependencies
       run: |

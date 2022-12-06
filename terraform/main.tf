@@ -51,6 +51,11 @@ resource "aws_sqs_queue" "Data_order_queue" {
   message_retention_seconds  = 345600
   receive_wait_time_seconds  = 0
 
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.delivery_failure_queue.arn
+    maxReceiveCount     = 5
+  })
+
   tags = {
     Environment = "testing"
   }
@@ -64,12 +69,39 @@ resource "aws_sqs_queue" "delivery_failure_queue" {
   message_retention_seconds = 345600
   receive_wait_time_seconds = 10
 
+
   tags = {
     Environment = "testing"
   }
 }
 
 # trigger to reference the sqs 
+# trigger 
+
+# resource "aws_s3_queue" "status_page_trigger" {
+
+
+
+#   lambda_function {
+#     lambda_function_arn = aws_lambda_function.lambda.arn
+#     events              = ["s3:ObjectCreated:*"]
+#     filter_suffix       = ".json"
+#   }
+#   depends_on = [
+#     aws_lambda_permission.bucket_invocation
+#   ]
+# }
+
+# # permissions
+
+# resource "aws_lambda_permission" "bucket_invocation" {
+#   statement_id  = "AllowExecutionFromS3"
+#   action        = "lambda:InvokeFunction"
+#   function_name = aws_lambda_function.lambda.function_name
+#   principal     = "s3.amazonaws.com"
+#   source_arn    = aws_s3_bucket.service-status-page-trigger-bucket.arn
+# }
+
 # s3
 
 # creating a bucket for the deployment zip into the lambda function
