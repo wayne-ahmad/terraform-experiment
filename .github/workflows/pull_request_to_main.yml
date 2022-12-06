@@ -52,11 +52,13 @@ jobs:
 
 
 # run build.sh
-
     - name: build.sh
       run: |
         sh build.sh
-        ls -a  
+       
+# Terraform
+    - name: Terraform resources
+      run: |
         cd terraform
         terraform init
         terraform apply --auto-approve
