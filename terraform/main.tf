@@ -38,7 +38,47 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 }
 
 # add a trigger
-# create a sqs 
+# create queue policy
+# create dead letter queue
+
+# resource "aws_sqs_queue" "terraform_queue_deadletter" {
+#   name = "terraform-example-deadletter-queue"
+#   redrive_allow_policy = jsonencode({
+#     redrivePermission = "byQueue",
+#     sourceQueueArns   = [aws_sqs_queue.Data_order_queue.arn]
+#   })
+# }
+# # create a sqs 
+
+# resource "aws_sqs_queue" "Data_order_queue" {
+#   name                      = "Data_order_queue"
+#   delay_seconds             = 0
+#   max_message_size          = 262144
+#   message_retention_seconds = 345600
+#   receive_wait_time_seconds = 10
+#   redrive_policy = jsonencode({
+#     deadLetterTargetArn = aws_sqs_queue.terraform_queue_deadletter.arn
+#     maxReceiveCount     = 4
+#   })
+
+#   tags = {
+#     Environment = "production"
+#   }
+# }
+
+# # Delivery failure queue
+# resource "aws_sqs_queue" "delivery_failure_queue" {
+#   name                      = "delivery_failure_queue"
+#   delay_seconds             = 0
+#   max_message_size          = 262144
+#   message_retention_seconds = 345600
+#   receive_wait_time_seconds = 10
+
+#   tags = {
+#     Environment = "production"
+#   }
+# }
+
 # trigger to reference the sqs 
 # s3
 
@@ -94,7 +134,7 @@ data "archive_file" "lambda" {
   type        = "zip"
   source_dir  = "../"
   output_path = "../temp/lambda.zip"
-  excludes    = ["src/tests.py", ".git", ".gitignore", "temp", "ignoreme", "terraform"]
+  excludes    = [".gitignore"]
 
 }
 
@@ -109,7 +149,7 @@ data "local_file" "deploy-zip" {
 resource "aws_s3_object" "file_upload" {
   bucket = aws_s3_bucket.deployment-bucket.id
   key    = "lambda-deployment.zip"
-  source = data.local_file.deploy-zip.filename # its mean it depended on zip
+  source = data.local_file.deploy-zip.filename
 }
 
 
