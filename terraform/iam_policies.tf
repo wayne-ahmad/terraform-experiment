@@ -20,7 +20,8 @@ data "aws_iam_policy_document" "assume_lambda_policy" {
       "s3:putObject",
       "s3:ListBucket",
       "sqs:ReceiveMessage",
-      "sqs:DeleteMessage"
+      "sqs:DeleteMessage",
+      "sqs:GetQueueAttributes"
     ]
     effect    = "Allow"
     resources = ["*"]
