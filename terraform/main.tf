@@ -42,6 +42,7 @@ resource "aws_sqs_queue" "Data_order_queue" {
   max_message_size           = 262144
   message_retention_seconds  = 345600
   receive_wait_time_seconds  = 0
+  sqs_managed_sse_enabled    = false
 
   redrive_policy = jsonencode({
     deadLetterTargetArn = aws_sqs_queue.delivery_failure_queue.arn
@@ -61,6 +62,7 @@ resource "aws_sqs_queue" "delivery_failure_queue" {
   max_message_size          = 262144
   message_retention_seconds = 345600
   receive_wait_time_seconds = 10
+  sqs_managed_sse_enabled   = false
 
 
   tags = {
