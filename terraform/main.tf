@@ -41,43 +41,40 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 # create queue policy
 # create dead letter queue
 
-# resource "aws_sqs_queue" "terraform_queue_deadletter" {
-#   name = "terraform-example-deadletter-queue"
-#   redrive_allow_policy = jsonencode({
-#     redrivePermission = "byQueue",
-#     sourceQueueArns   = [aws_sqs_queue.Data_order_queue.arn]
-#   })
-# }
-# # create a sqs 
+resource "aws_sqs_queue" "terraform_queue_deadletter" {
+  name = "terraform-example-deadletter-queue"
+  redrive_allow_policy = jsonencode({
+    redrivePermission = "byQueue",
+    sourceQueueArns   = aws_sqs_queue.Data_order_queue.arn
+  })
+}
+# create a sqs 
 
-# resource "aws_sqs_queue" "Data_order_queue" {
-#   name                      = "Data_order_queue"
-#   delay_seconds             = 0
-#   max_message_size          = 262144
-#   message_retention_seconds = 345600
-#   receive_wait_time_seconds = 10
-#   redrive_policy = jsonencode({
-#     deadLetterTargetArn = aws_sqs_queue.terraform_queue_deadletter.arn
-#     maxReceiveCount     = 4
-#   })
+resource "aws_sqs_queue" "Data_order_queue" {
+  name                      = "Data_order_queue"
+  delay_seconds             = 0
+  max_message_size          = 262144
+  message_retention_seconds = 345600
+  receive_wait_time_seconds = 10
 
-#   tags = {
-#     Environment = "production"
-#   }
-# }
 
-# # Delivery failure queue
-# resource "aws_sqs_queue" "delivery_failure_queue" {
-#   name                      = "delivery_failure_queue"
-#   delay_seconds             = 0
-#   max_message_size          = 262144
-#   message_retention_seconds = 345600
-#   receive_wait_time_seconds = 10
+  tags = {
+    Environment = "testing"
+  }
+}
 
-#   tags = {
-#     Environment = "production"
-#   }
-# }
+# Delivery failure queue
+resource "aws_sqs_queue" "delivery_failure_queue" {
+  name                      = "delivery_failure_queue"
+  delay_seconds             = 0
+  max_message_size          = 262144
+  message_retention_seconds = 345600
+  receive_wait_time_seconds = 10
+
+  tags = {
+    Environment = "testing"
+  }
+}
 
 # trigger to reference the sqs 
 # s3
@@ -129,7 +126,6 @@ resource "aws_cloudwatch_log_group" "lambda_function_log" {
 
 
 # deployment_zip_file.
-
 data "archive_file" "lambda" {
   type        = "zip"
   source_dir  = "../"
@@ -145,7 +141,6 @@ data "local_file" "deploy-zip" {
 
 
 # uploading deployment zip to deployment bucket
-
 resource "aws_s3_object" "file_upload" {
   bucket = aws_s3_bucket.deployment-bucket.id
   key    = "lambda-deployment.zip"
@@ -154,7 +149,6 @@ resource "aws_s3_object" "file_upload" {
 
 
 # lambda policy 
-
 resource "aws_iam_role_policy" "lambda_policy" {
   name   = "lambda_policy"
   role   = aws_iam_role.lambda_role.id
@@ -162,9 +156,7 @@ resource "aws_iam_role_policy" "lambda_policy" {
 }
 
 
-
 # lambda role
-
 resource "aws_iam_role" "lambda_role" {
   name               = "lambda_role"
   assume_role_policy = data.aws_iam_policy_document.assume_lambda_role.json
