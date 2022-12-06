@@ -7,10 +7,9 @@ cp deploy/* ./package
 # resources withhout __init__.py. Newer versions can't find them
 # when we do include it!
 touch ./package/metadata_specifications/metadata/__init__.py
-ls -a
 cd package || exit
-la -a
 zip -r ../deploy.zip .
+ls -a
 cd .. || exit
 ls -a
 zip -g deploy.zip lambda_function.py
