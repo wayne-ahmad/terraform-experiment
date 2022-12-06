@@ -12,7 +12,6 @@ permissions:
 jobs:
 
   build:
-
     runs-on: ubuntu-latest
     steps:
 
@@ -28,16 +27,15 @@ jobs:
         python -m pip install --upgrade pip
 
 # Access SSH Key
-    - name:
+    - name: Add ssh-agent to clone private repo
       uses: webfactory/ssh-agent@v0.4.1 
       with:          
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
 
 # install requirements.txt
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
+    - name: Install dependencies / Requirements.txt
+      run:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
 
@@ -51,12 +49,12 @@ jobs:
 
 
 # run build.sh
-    - name: build.sh
+    - name: Run build.sh
       run: |
         sh build.sh
        
 # Terraform
-    - name: Terraform resources
+    - name: Deploy terraform resources
       run: |
         cd terraform
         terraform init
