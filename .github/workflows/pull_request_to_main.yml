@@ -14,7 +14,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
     steps:
 
 
@@ -60,4 +59,4 @@ jobs:
         ls -a  
         cd terraform
         terraform init
-        terraform destroy --auto-approve
+        terraform apply --auto-approve
