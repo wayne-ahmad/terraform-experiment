@@ -64,11 +64,6 @@ resource "aws_sqs_queue" "delivery_failure_queue" {
   receive_wait_time_seconds = 10
   sqs_managed_sse_enabled   = false
 
-  redrive_allow_policy = jsonencode({
-    redrivePermission = "byQueue",
-    sourceQueueArns   = [aws_sqs_queue.Data_order_queue.arn]
-  })
-
   tags = {
     Environment = "testing"
   }
