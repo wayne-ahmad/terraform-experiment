@@ -28,7 +28,6 @@ variable "lambda_config" {
 # create log groups
 # give it a role and premissions to write to log
 # add in environment variables
-
 # add in a lambda layer
 
 resource "aws_lambda_layer_version" "lambda_layer" {
@@ -99,7 +98,7 @@ resource "aws_lambda_function" "lambda" {
 
   function_name = var.lambda_config.function_name
   # filename         = data.archive_file.lambda.output_path
-  source_code_hash = aws_s3_object.file_upload.source_hash
+  source_code_hash = data.archive_file.lambda.output_base64sha256
   s3_bucket        = aws_s3_bucket.deployment-bucket.bucket
   s3_key           = aws_s3_object.file_upload.key
   role             = aws_iam_role.lambda_role.arn
@@ -131,13 +130,13 @@ resource "aws_cloudwatch_log_group" "lambda_function_log" {
 
 # deployment_zip_file.
 
-# data "archive_file" "lambda" {
-#   type        = "zip"
-#   source_dir  = "../"
-#   output_path = "../temp/lambda.zip"
-#   excludes    = [".gitignore"]
+data "archive_file" "lambda" {
+  type        = "zip"
+  source_dir  = "../"
+  output_path = "../temp/lambda.zip"
+  excludes    = [".gitignore"]
 
-# }
+}
 
 # find local file deploy.zip
 data "local_file" "deploy-zip" {
