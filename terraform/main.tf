@@ -76,32 +76,15 @@ resource "aws_sqs_queue" "delivery_failure_queue" {
 }
 
 # trigger to reference the sqs 
+resource "aws_lambda_event_source_mapping" "event_source_mapping" {
+  event_source_arn = aws_sqs_queue.Data_order_queue.arn
+  enabled          = true
+  function_name    = aws_lambda_function.lambda.arn
+  batch_size       = 5
+}
 # trigger 
 
 # resource "aws_s3_queue" "status_page_trigger" {
-
-
-
-#   lambda_function {
-#     lambda_function_arn = aws_lambda_function.lambda.arn
-#     events              = ["s3:ObjectCreated:*"]
-#     filter_suffix       = ".json"
-#   }
-#   depends_on = [
-#     aws_lambda_permission.bucket_invocation
-#   ]
-# }
-
-# # permissions
-
-# resource "aws_lambda_permission" "bucket_invocation" {
-#   statement_id  = "AllowExecutionFromS3"
-#   action        = "lambda:InvokeFunction"
-#   function_name = aws_lambda_function.lambda.function_name
-#   principal     = "s3.amazonaws.com"
-#   source_arn    = aws_s3_bucket.service-status-page-trigger-bucket.arn
-# }
-
 # s3
 
 # creating a bucket for the deployment zip into the lambda function
@@ -186,3 +169,25 @@ resource "aws_iam_role" "lambda_role" {
   name               = "lambda_role"
   assume_role_policy = data.aws_iam_policy_document.assume_lambda_role.json
 }
+
+
+
+#   lambda_function {
+#     lambda_function_arn = aws_lambda_function.lambda.arn
+#     events              = ["s3:ObjectCreated:*"]
+#     filter_suffix       = ".json"
+#   }
+#   depends_on = [
+#     aws_lambda_permission.bucket_invocation
+#   ]
+# }
+
+# # permissions
+
+# resource "aws_lambda_permission" "bucket_invocation" {
+#   statement_id  = "AllowExecutionFromS3"
+#   action        = "lambda:InvokeFunction"
+#   function_name = aws_lambda_function.lambda.function_name
+#   principal     = "s3.amazonaws.com"
+#   source_arn    = aws_s3_bucket.service-status-page-trigger-bucket.arn
+# }
