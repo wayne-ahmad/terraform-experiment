@@ -119,10 +119,10 @@ data "local_file" "deploy-zip" {
 
 # uploading deployment zip to deployment bucket
 resource "aws_s3_object" "file_upload" {
-  bucket = aws_s3_bucket.deployment-bucket.id
-  key    = "lambda-deployment.zip"
-  source = data.local_file.deploy-zip.filename
-  # etag   = filemd5(data.local_file.deploy-zip.filename)
+  bucket      = aws_s3_bucket.deployment-bucket.id
+  key         = "lambda-deployment.zip"
+  source      = data.local_file.deploy-zip.filename
+  etag        = filemd5(data.local_file.deploy-zip.filename)
   source_hash = filemd5(data.local_file.deploy-zip.filename)
 }
 
