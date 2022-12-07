@@ -5,6 +5,7 @@ from dataquery_processor.queue_controller import Message
 
 logger = logging.getLogger()
 
+# lambda handler 
 
 def lambda_handler(event, context):
     if 'Records' in event:
