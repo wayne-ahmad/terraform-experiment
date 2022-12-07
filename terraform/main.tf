@@ -94,7 +94,7 @@ resource "aws_lambda_function" "lambda" {
 
   function_name = var.lambda_config.function_name
   # filename         = data.archive_file.lambda.output_path
-  source_code_hash = sha256(filebase64(data.local_file.deploy-zip.filename))
+  source_code_hash = aws_s3_object.file_upload.source_hash
   s3_bucket        = aws_s3_bucket.deployment-bucket.bucket
   s3_key           = aws_s3_object.file_upload.key
   role             = aws_iam_role.lambda_role.arn
@@ -119,10 +119,10 @@ data "local_file" "deploy-zip" {
 
 # uploading deployment zip to deployment bucket
 resource "aws_s3_object" "file_upload" {
-  bucket = aws_s3_bucket.deployment-bucket.id
-  key    = "lambda-deployment.zip"
-  source = data.local_file.deploy-zip.filename
-  etag   = filemd5(data.local_file.deploy-zip.filename)
+  bucket      = aws_s3_bucket.deployment-bucket.id
+  key         = "lambda-deployment.zip"
+  source      = data.local_file.deploy-zip.filename
+  source_hash = filemd5(data.local_file.deploy-zip.filename)
 }
 
 # cloudwatch log group
