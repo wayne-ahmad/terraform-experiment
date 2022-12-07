@@ -94,7 +94,7 @@ resource "aws_lambda_function" "lambda" {
 
   function_name = var.lambda_config.function_name
   # filename         = data.archive_file.lambda.output_path
-  source_code_hash = data.archive_file.lambda.output_base64sha256
+  source_code_hash = sha256(file(data.local_file.deploy-zip.filename))
   s3_bucket        = aws_s3_bucket.deployment-bucket.bucket
   s3_key           = aws_s3_object.file_upload.key
   role             = aws_iam_role.lambda_role.arn
@@ -113,6 +113,17 @@ resource "aws_lambda_function" "lambda" {
   }
 }
 
+data "local_file" "deploy-zip" {
+  filename = "../deploy.zip"
+}
+
+
+# uploading deployment zip to deployment bucket
+resource "aws_s3_object" "file_upload" {
+  bucket = aws_s3_bucket.deployment-bucket.id
+  key    = "lambda-deployment.zip"
+  source = data.local_file.deploy-zip.filename
+}
 # cloudwatch log group
 resource "aws_cloudwatch_log_group" "lambda_function_log" {
   name = "/aws/lambda/${aws_lambda_function.lambda.function_name}"
@@ -137,17 +148,6 @@ data "archive_file" "lambda" {
 # The file gets created inside the containter running the action, gets uploaded to the bucket,
 # then deletes when the container is shut down
 
-data "local_file" "deploy-zip" {
-  filename = "../deploy.zip"
-}
-
-
-# uploading deployment zip to deployment bucket
-resource "aws_s3_object" "file_upload" {
-  bucket = aws_s3_bucket.deployment-bucket.id
-  key    = "lambda-deployment.zip"
-  source = data.local_file.deploy-zip.filename
-}
 
 
 # lambda policy 
