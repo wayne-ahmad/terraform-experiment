@@ -27,12 +27,12 @@ class Config:
         self.queue_configuration = {"profile": self.config.get('sqs', "profile"),
                                     "queue": self.config.get('sqs', "queue"),
                                     "region": self.config.get('sqs', "region")}
-        self.queue_configuration["queue"] = os.environ.get("TEST_ORDER_QUEUE", self.queue_configuration["queue"])
+        self.queue_configuration["queue"] = os.environ.get("ORDER_QUEUE", self.queue_configuration["queue"])
 
         self.storage_configuration = {"profile": self.config.get('s3', "profile"),
                                       "bucket": self.config.get('s3', "bucket"),
                                       "region": self.config.get('s3', "region")}
-        self.storage_configuration["bucket"] = os.environ.get("TEST_PROCESSED_ORDERS_BUCKET", self.storage_configuration["bucket"])
+        self.storage_configuration["bucket"] = os.environ.get("PROCESSED_ORDERS_BUCKET", self.storage_configuration["bucket"])
 
     def get_table_mapping(self, mapping):
         if self.config.has_option('table_mappings', mapping):
