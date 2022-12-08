@@ -54,6 +54,7 @@ resource "aws_sqs_queue" "Data_order_queue" {
   }
 }
 
+
 # create dead letter queue
 # Delivery failure queue
 resource "aws_sqs_queue" "delivery_failure_queue" {
@@ -92,8 +93,7 @@ resource "aws_s3_bucket" "deployment-bucket" {
 # lambda function, loading zip from deployment-bucket, role python
 resource "aws_lambda_function" "lambda" {
 
-  function_name = var.lambda_config.function_name
-  # filename         = data.archive_file.lambda.output_path
+  function_name    = var.lambda_config.function_name
   source_code_hash = aws_s3_object.file_upload.source_hash
   s3_bucket        = aws_s3_bucket.deployment-bucket.bucket
   s3_key           = aws_s3_object.file_upload.key
@@ -121,8 +121,8 @@ data "local_file" "deploy-zip" {
 resource "aws_s3_object" "file_upload" {
   bucket      = aws_s3_bucket.deployment-bucket.id
   key         = "lambda-deployment.zip"
-  source      = data.local_file.deploy-zip.filename
   source_hash = filemd5(data.local_file.deploy-zip.filename)
+  source      = data.local_file.deploy-zip.filename
 }
 
 # cloudwatch log group
@@ -137,13 +137,13 @@ resource "aws_cloudwatch_log_group" "lambda_function_log" {
 
 
 # deployment_zip_file.
-data "archive_file" "lambda" {
-  type        = "zip"
-  source_dir  = "../"
-  output_path = "../temp/lambda.zip"
-  excludes    = [".gitignore"]
+# data "archive_file" "lambda" {
+#   type        = "zip"
+#   source_dir  = "../"
+#   output_path = "../temp/lambda.zip"
+#   excludes    = [".gitignore"]
 
-}
+# }
 
 # find local file deploy.zip | Note - This file is created during the run build.sh in the github action.
 # The file gets created inside the containter running the action, gets uploaded to the bucket,
