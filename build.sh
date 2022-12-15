@@ -9,8 +9,6 @@ cp deploy/* ./package
 touch ./package/metadata_specifications/metadata/__init__.py
 cd package || exit
 zip -r ../deploy.zip .
-ls -a
 cd .. || exit
-ls -a
 zip -g deploy.zip lambda_function.py
 rm -rf package
